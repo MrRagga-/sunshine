@@ -1,0 +1,216 @@
+{
+  "info": {
+    "version": "1.0.0",
+    "description": "The sonnenBatterie API allows to remote control a sonnenBatterie. Most API endpoints require an authentication token. This token is available in the sonnenBatterie Dashboard ('Software-Integration').\nUnproteced endpoints are marked below.\n\nExample request:\n\n<code>curl --header 'Auth-Token: TOKEN' http://SYSTEM-IP/api/v2/latestdata</code>",
+    "title": "sonnenBatterie API"
+  },
+  "paths": {
+    "/api/v2/setpoint/discharge/{watt}": {
+      "post": {
+        "responses": {
+          "201": { "description": "true" },
+          "403": { "description": "403 Forbidden (VPP has priority)" },
+          "401": { "description": "401 Unauthorized" }
+        },
+        "parameters": [
+          {
+            "description": "For example: <b>2000</b>",
+            "format": "int32",
+            "required": true,
+            "maximum": 1000000,
+            "minimum": 0,
+            "in": "path",
+            "type": "integer",
+            "name": "watt"
+          }
+        ],
+        "produces": ["application/json"],
+        "description": "The discharging power of a storage system can be controlled by setting a setpoint in watts. The corresponding value of the setpoint is kept until the battery receives a new charging or discharging value. <br>If VPP is active, the request will be rejected.",
+        "tags": ["api"],
+        "summary": "Sends a discharge command to the battery (Write API)",
+        "consumes": ["application/json"],
+        "operationId": "postApiV2SetpointDischargeWatt"
+      }
+    },
+    "/api/v2/configurations/{name}": {
+      "get": {
+        "responses": {
+          "200": { "description": "{ \"EM_OperatingMode\": \"2\" }" },
+          "403": { "description": "403 Forbidden" },
+          "401": { "description": "401 Unauthorized" }
+        },
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "One of the available configuration keys.",
+            "in": "path",
+            "name": "name"
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "getApiV2ConfigurationsName",
+        "description": "Gets the value for one of these configurations: \n <ul><li><b>CM_MarketingModuleCapacity</b></li><li><b>CN_CascadingRole</b></li><li><b>DE_Software</b></li><li><b>EM_OperatingMode</b></li><li><b>EM_Prognosis_Charging</b></li><li><b>EM_RE_ENABLE_MICROGRID</b></li><li><b>EM_ToU_Schedule</b></li><li><b>EM_USER_INPUT_TIME_ONE</b></li><li><b>EM_USER_INPUT_TIME_THREE</b></li><li><b>EM_USER_INPUT_TIME_TWO</b></li><li><b>EM_USOC</b></li><li><b>EM_US_CHP_Max_SOC</b></li><li><b>EM_US_CHP_Min_SOC</b></li><li><b>EM_US_GENRATOR_TYPE</b></li><li><b>EM_US_GEN_POWER_SET_POINT</b></li><li><b>EM_US_RE_ENABLE_MICROGRID</b></li><li><b>EM_US_USER_INPUT_TIME_ONE</b></li><li><b>EM_US_USER_INPUT_TIME_THREE</b></li><li><b>EM_US_USER_INPUT_TIME_TWO</b></li><li><b>IC_BatteryModules</b></li><li><b>IC_InverterMaxPower_w</b></li><li><b>NVM_PfcFixedCosPhi</b></li><li><b>NVM_PfcIsFixedCosPhiActive</b></li><li><b>NVM_PfcIsFixedCosPhiLagging</b></li><li><b>SH_HeaterOperatingMode</b></li><li><b>SH_HeaterTemperatureMax</b></li><li><b>SH_HeaterTemperatureMin</b></li></ul>",
+        "tags": ["api"],
+        "summary": "Gets the value of a given configuration (Read API)"
+      }
+    },
+    "/api/v2/io": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>{\n  \"DI_1\": {\n    \"connector\": \"X23_1\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DI_10\": {\n    \"connector\": \"X23_10\",\n    \"status\": 0,\n    \"usage\": \"Micro CHP\"\n  },\n  \"DI_11\": {\n    \"connector\": \"X23_11\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DI_12\": {\n    \"connector\": \"X23_12\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DI_2\": {\n    \"connector\": \"X23_2\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DI_3\": {\n    \"connector\": \"X23_3\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DI_4\": {\n    \"connector\": \"X23_4\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DI_5\": {\n    \"connector\": \"X23_5\",\n    \"status\": 0,\n    \"usage\": \"OV\"\n  },\n  \"DI_6\": {\n    \"connector\": \"X23_6\",\n    \"status\": 0,\n    \"usage\": \"CE\"\n  },\n  \"DI_7\": {\n    \"connector\": \"X23_7\",\n    \"status\": 0,\n    \"usage\": \"DE\"\n  },\n  \"DI_8\": {\n    \"connector\": \"X23_8\",\n    \"status\": 0,\n    \"usage\": \"UV\"\n  },\n  \"DI_9\": {\n    \"connector\": \"X23_9\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_1\": {\n    \"connector\": \"X24_4\",\n    \"status\": 1,\n    \"usage\": \"DC-CONTACTOR\"\n  },\n  \"DO_10\": {\n    \"connector\": \"X24_10\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_11\": {\n    \"connector\": \"X24_11\",\n    \"status\": 1,\n    \"usage\": \"CHP SOC (Min/Max)\"\n  },\n  \"DO_12\": {\n    \"connector\": \"X24_12\",\n    \"status\": 0,\n    \"usage\": \"Self Consumption Relay\"\n  },\n  \"DO_13\": {\n    \"connector\": \"X24_16\",\n    \"status\": 0,\n    \"usage\": \"PV Reduction 1\"\n  },\n  \"DO_14\": {\n    \"connector\": \"X24_15\",\n    \"status\": 0,\n    \"usage\": \"PV Reduction 2\"\n  },\n  \"DO_16\": {\n    \"connector\": \"X24_13\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_2\": {\n    \"connector\": \"X24_3\",\n    \"status\": 0,\n    \"usage\": \"DC-FAN\"\n  },\n  \"DO_3\": {\n    \"connector\": \"X24_2\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_4\": {\n    \"connector\": \"X24_1\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_5\": {\n    \"connector\": \"X24_5\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_6\": {\n    \"connector\": \"X24_6\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_7\": {\n    \"connector\": \"X24_7\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_8\": {\n    \"connector\": \"X24_8\",\n    \"status\": 0,\n    \"usage\": \"\"\n  },\n  \"DO_9\": {\n    \"connector\": \"X24_9\",\n    \"status\": 0,\n    \"usage\": \"\"\n  }\n}\n</pre>"
+          },
+          "401": { "description": "401 Unauthorized" },
+          "500": { "description": "{\"error\":\"No IO data available\"}" }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Io",
+        "tags": ["api"],
+        "summary": "Get inputs and outputs (Read API)",
+        "description": "Returns the status of all inputs and outputs"
+      }
+    },
+    "/api/v2/battery": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>{\n  \"balancechargerequest\": 0,\n  \"chargecurrentlimit\": 38.0,\n  \"cyclecount\": 344,\n  \"dischargecurrentlimit\": 38.0,\n  \"fullchargecapacity\": 96.922,\n  \"maximumcelltemperature\": 28.05,\n  \"maximumcellvoltage\": 3.327,\n  \"maximumcellvoltagenum\": 0,\n  \"maximummodulecurrent\": -0.01,\n  \"maximummoduledcvoltage\": 106.27,\n  \"maximummoduletemperature\": -273.15,\n  \"minimumcelltemperature\": 22.05,\n  \"minimumcellvoltage\": 3.293,\n  \"minimumcellvoltagenum\": 0,\n  \"minimummodulecurrent\": -0.05,\n  \"minimummoduledcvoltage\": 105.528,\n  \"minimummoduletemperature\": -273.15,\n  \"relativestateofcharge\": 79.0,\n  \"remainingcapacity\": 79.941,\n  \"systemalarm\": 0,\n  \"systemcurrent\": 0.0,\n  \"systemdcvoltage\": 211.797,\n  \"systemstatus\": 49,\n  \"systemtime\": 0,\n  \"systemwarning\": 0\n}\n</pre>"
+          },
+          "401": { "description": "401 Unauthorized" },
+          "500": {
+            "description": "{\"error\":\"No battery measurements available\"}"
+          }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Battery",
+        "tags": ["api"],
+        "summary": "Gets the battery measurements (Read API)",
+        "description": "<p>Gets battery data for the sonnenBatterie.</p>\n\n<table>\n  <thead>\n    <tr>\n      <th>Variable</th>\n      <th>Example Value</th>\n      <th>Unit</th>\n      <th>Description</th>\n      <th>Data type</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>balancechargerequest</td>\n      <td>0</td>\n      <td>N/A</td>\n      <td>Module request for balance charge, 0 for false, 1 for true</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>chargecurrentlimit</td>\n      <td>38.0</td>\n      <td>A</td>\n      <td>Module charge current limit</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>cyclecount</td>\n      <td>344</td>\n      <td>N/A</td>\n      <td>Number of charge/discharge cycles</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>dischargecurrentlimit</td>\n      <td>38.0</td>\n      <td>A</td>\n      <td>Module discharge current limit</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>fullchargecapacity</td>\n      <td>96.922</td>\n      <td>Ah</td>\n      <td>Fullcharge capacity</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>maximumcelltemperature</td>\n      <td>28.05</td>\n      <td>\u00baC</td>\n      <td>Max cell temperature</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>maximumcellvoltage</td>\n      <td>3.327</td>\n      <td>V</td>\n      <td>Max cell voltage</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>maximumcellvoltagenum</td>\n      <td>0</td>\n      <td>-</td>\n      <td>-</td>\n      <td>Enum</td>\n    </tr>\n    <tr>\n      <td>maximummodulecurrent</td>\n      <td>-0.01</td>\n      <td>A</td>\n      <td>Max module DC current</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>maximummoduledcvoltage</td>\n      <td>106.27</td>\n      <td>V</td>\n      <td>Max module DC voltage</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>maximummoduletemperature</td>\n      <td>-273.15</td>\n      <td>\u00baC</td>\n      <td>Max module DC temperature</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>minimumcelltemperature</td>\n      <td>22.05</td>\n      <td>\u00baC</td>\n      <td>Min cell temperature</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>minimumcellvoltage</td>\n      <td>3.293</td>\n      <td>V</td>\n      <td>Min cell voltage</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>minimumcellvoltagenum</td>\n      <td>0</td>\n      <td>-</td>\n      <td>-</td>\n      <td>Enum</td>\n    </tr>\n    <tr>\n      <td>minimummodulecurrent</td>\n      <td>-0.05</td>\n      <td>A</td>\n      <td>Min module current</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>minimummoduledcvoltage</td>\n      <td>105.528</td>\n      <td>V</td>\n      <td>Min module voltage</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>minimummoduletemperature</td>\n      <td>-273.15</td>\n      <td>\u00baC</td>\n      <td>Min module temperature</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>relativestateofcharge</td>\n      <td>79.0</td>\n      <td>%, percentage</td>\n      <td>Relative state of charge</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>remainingcapacity</td>\n      <td>79.941</td>\n      <td>Ah</td>\n      <td>Remaining capacity in Ah</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>systemalarm</td>\n      <td>0</td>\n      <td>N/A</td>\n      <td>System alarm, 0 for false, 1 for true</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>systemcurrent</td>\n      <td>0.0</td>\n      <td>A</td>\n      <td>System current</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>systemdcvoltage</td>\n      <td>211.797</td>\n      <td>V</td>\n      <td>System battery voltage</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>systemstatus</td>\n      <td>49</td>\n      <td>N/A</td>\n      <td>System status</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>systemtime</td>\n      <td>0</td>\n      <td>N/A</td>\n      <td>System time</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>systemwarning</td>\n      <td>0</td>\n      <td>N/A</td>\n      <td>System warning, 0 for false, 1 for true</td>\n      <td>Boolean</td>\n    </tr>\n  </tbody>\n</table>\n\n\n"
+      }
+    },
+    "/api/v2/status": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>{\n  \"Apparent_output\": 96,\n  \"BackupBuffer\": \"0\",\n  \"BatteryCharging\": false,\n  \"BatteryDischarging\": false,\n  \"Consumption_W\": 0,\n  \"Fac\": 50.0239143371582,\n  \"FlowConsumptionBattery\": false,\n  \"FlowConsumptionGrid\": false,\n  \"FlowConsumptionProduction\": false,\n  \"FlowGridBattery\": false,\n  \"FlowProductionBattery\": false,\n  \"FlowProductionGrid\": false,\n  \"GridFeedIn_W\": -3,\n  \"IsSystemInstalled\": 1,\n  \"OperatingMode\": \"2\",\n  \"Pac_total_W\": 7,\n  \"Production_W\": 0,\n  \"RSOC\": 21,\n  \"Sac1\": 96,\n  \"Sac2\": null,\n  \"Sac3\": null,\n  \"SystemStatus\": \"OnGrid\",\n  \"Timestamp\": \"2020-03-26 17:10:06\",\n  \"USOC\": 12,\n  \"Uac\": 238,\n  \"Ubat\": 209,\n  \"dischargeNotAllowed\": false,\n  \"generator_autostart\": false\n}\n</pre>"
+          }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Status",
+        "tags": ["api"],
+        "summary": "Gets status data for this sonnenBatterie",
+        "description": "<p>Gets status data for this sonnenBatterie. This endpoint does not require an authentication token.</p>\n\n<table>\n  <thead>\n    <tr>\n      <th>Variable</th>\n      <th>Example Value</th>\n      <th>Unit</th>\n      <th>Description</th>\n      <th>Data type</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Apparent_output</td>\n      <td>226</td>\n      <td>VA, volt-ampere</td>\n      <td>All AC output of apparent power in VA</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>BackupBuffer</td>\n      <td>0</td>\n      <td>%, percentage</td>\n      <td>Backup-buffer in percentage that is set on the system.</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>BatteryCharging</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the charge status. True if charging</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>BatteryDischarging</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the discharge status. True if discharging</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>Consumption_Avg</td>\n      <td>223</td>\n      <td>W, watt</td>\n      <td>House consumption in watts, average over the last 60s</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Consumption_W</td>\n      <td>232</td>\n      <td>W, watt</td>\n      <td>House consumption in watts, direct measurement </td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Fac</td>\n      <td>49.999000549316400</td>\n      <td>Hz, hertz</td>\n      <td>AC frequency in hertz</td>\n      <td>Float</td>\n    </tr>\n    <tr>\n      <td>FlowConsumptionBattery</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the energy flow at the installation site. True if battery feeds the consumption</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>FlowConsumptionGrid</td>\n      <td>true</td>\n      <td>-</td>\n      <td>Boolean that indicates the energy flow at the installation site. True if grid feeds the consumption</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>FlowConsumptionProduction</td>\n      <td>true</td>\n      <td>-</td>\n      <td>Boolean that indicates the energy flow at the installation site. True if production feeds the consumption\n      </td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>FlowGridBattery</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the energy flow at the installation site. True if battery is charging from grid</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>FlowProductionBattery</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the energy flow at the installation site. True if production is charging the battery\n      </td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>FlowProductionGrid</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the energy flow at the installation site. True if production feeds into the grid</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>GridFeedIn_W</td>\n      <td>-208</td>\n      <td>W, watt</td>\n      <td>Grid Feed in negative is consumption and positive is feed in </td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>IsSystemInstalled</td>\n      <td>1</td>\n      <td>-</td>\n      <td>System is installed or not</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>OperatingMode</td>\n      <td>2</td>\n      <td>-</td>\n      <td>Operating mode that is set on the system:\n        <ul>\n          <li>1: Manual charging or discharging via API</li>\n          <li>2: Automatic Self Consumption. Default</li>\n        </ul>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Pac_total_W</td>\n      <td>-5</td>\n      <td>W, watt</td>\n      <td>AC Power greater than ZERO is discharging Inverter AC Power less than ZERO is charging</td>\n      <td>Signed Integer</td>\n    </tr>\n    <tr>\n      <td>Production_W</td>\n      <td>28</td>\n      <td>W, watt</td>\n      <td>PV production in watts</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>RSOC</td>\n      <td>4</td>\n      <td>%, percentage</td>\n      <td>Relative state of charge</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>RemainingCapacity_W</td>\n      <td>674</td>\n      <td>Wh</td>\n      <td>Remaining capacity based on RSOC</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Sac1</td>\n      <td>75</td>\n      <td>VA, volt-ampere</td>\n      <td>Output of apparent power in VA on Phase 1</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Sac2</td>\n      <td>75</td>\n      <td>VA, volt-ampere</td>\n      <td>Output of apparent power in VA on Phase 2</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Sac3</td>\n      <td>76</td>\n      <td>VA, volt-ampere</td>\n      <td>Output of apparent power in VA on Phase 3</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>SystemStatus</td>\n      <td>OnGrid</td>\n      <td>-</td>\n      <td>String that indicates if the system is connected to the grid (\u201cOnGrid\u201d) or disconnected (\u201cOffGrid\u201d)</td>\n      <td>String</td>\n    </tr>\n    <tr>\n      <td>Timestamp</td>\n      <td>2020-12-10 11:26:01</td>\n      <td>-</td>\n      <td>Local system time</td>\n      <td>String</td>\n    </tr>\n    <tr>\n      <td>USOC</td>\n      <td>0</td>\n      <td>%, percentage</td>\n      <td>User state of charge</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Uac</td>\n      <td>230</td>\n      <td>V, volt</td>\n      <td>AC voltage in volts</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>Ubat</td>\n      <td>50</td>\n      <td>V, volt</td>\n      <td>Battery voltage in volts</td>\n      <td>Integer</td>\n    </tr>\n    <tr>\n      <td>dischargeNotAllowed</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the discharge status. True if no discharge allowed, based on battery maintenance</td>\n      <td>Boolean</td>\n    </tr>\n    <tr>\n      <td>generator_autostart</td>\n      <td>false</td>\n      <td>-</td>\n      <td>Boolean that indicates the autostart setting of the generator.</td>\n      <td>Boolean</td>\n    </tr>\n  </tbody>\n</table>\n"
+      }
+    },
+    "/api/v2/configurations": {
+      "put": {
+        "responses": {
+          "200": { "description": "true" },
+          "403": { "description": "403 Forbidden (VPP has priority)" },
+          "401": { "description": "401 Unauthorized" }
+        },
+        "produces": ["application/json"],
+        "operationId": "putApiV2Configurations",
+        "description": "Sets the value of these configurations:\n<ul><li><b>EM_OperatingMode</b></li><li><b>EM_Prognosis_Charging</b></li><li><b>EM_RE_ENABLE_MICROGRID</b></li><li><b>EM_ToU_Schedule</b></li><li><b>EM_USER_INPUT_TIME_ONE</b></li><li><b>EM_USER_INPUT_TIME_THREE</b></li><li><b>EM_USER_INPUT_TIME_TWO</b></li><li><b>EM_USOC</b></li><li><b>EM_US_CHP_Max_SOC</b></li><li><b>EM_US_CHP_Min_SOC</b></li><li><b>EM_US_GENRATOR_TYPE</b></li><li><b>EM_US_GEN_POWER_SET_POINT</b></li><li><b>EM_US_RE_ENABLE_MICROGRID</b></li><li><b>EM_US_USER_INPUT_TIME_ONE</b></li><li><b>EM_US_USER_INPUT_TIME_THREE</b></li><li><b>EM_US_USER_INPUT_TIME_TWO</b></li><li><b>NVM_PfcFixedCosPhi</b></li><li><b>NVM_PfcIsFixedCosPhiActive</b></li><li><b>NVM_PfcIsFixedCosPhiLagging</b></li><li><b>SH_HeaterOperatingMode</b></li><li><b>SH_HeaterTemperatureMax</b></li><li><b>SH_HeaterTemperatureMin</b></li></ul>\n<br>\n<p>The operating mode (<b>EM_OperatingMode</b>) can not be changed if VPP is active</p>\n<p>\n    Possible values for <b>EM_USOC</b> are:\n    <ul>\n        <li><b>0</b> (disable backup buffer)</li>\n        <li><b>5 - 100</b> (backup buffer percentage)</li>\n    </ul>\n</p>\n<br>Example:\n<ul>\n  <li><code>curl -X PUT -d NVM_PfcFixedCosPhi=1 --header 'Auth-Token: TOKEN'\n      http://SYSTEM-IP/api/v2/configurations</code></li>\n  <li><code>curl -X PUT -d NVM_PfcFixedCosPhi=1 -d NVM_PfcIsFixedCosPhiActive=0 --header 'Auth-Token: TOKEN'\n      http://SYSTEM-IP/api/v2/configurations</code></li>\n</ul>\n",
+        "tags": ["api"],
+        "consumes": ["application/json"],
+        "summary": "Sets the value of configurations (Write API)"
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>{\n  \"CM_MarketingModuleCapacity\":\"5500\",\n   \"CN_CascadingRole\":\"secondary\",\n   \"DE_Software\":\"1.8.3\",\n   \"EM_CHP_Max_SOC\":\"90\",\n   \"EM_CHP_Min_SOC\":\"10\",\n   \"EM_OperatingMode\":\"1\",\n   \"EM_Prognosis_Charging\":\"0\",\n   \"EM_ToU_Schedule\":\"[{\\\"grid\\\":\\\"1\\\",\\\"start\\\":\\\"07:00\\\",\\\"stop\\\":\\\"08:00\\\",\\\"charge\\\":\\\"07:31\\\"}]\",\n   \"EM_USOC\":\"0\",\n   \"EM_US_GEN_POWER_SET_POINT\":\"0\",\n   \"EM_RE_ENABLE_MICROGRID\":\"0\",\n   \"EM_USER_INPUT_TIME_ONE\":\"00:00\",\n   \"EM_USER_INPUT_TIME_THREE\":\"00:00\",\n   \"EM_USER_INPUT_TIME_TWO\":\"00:00\",\n   \"EM_US_GENRATOR_TYPE\":\"automatic\",\n   \"IC_BatteryModules\":\"4\",\n   \"IC_InverterMaxPower_w\":\"3300\",\n   \"SH_HeaterOperatingMode\":\"0\",\n   \"SH_HeaterTemperatureMax\":\"65\",\n   \"SH_HeaterTemperatureMin\":\"42\",\n   \"NVM_PfcFixedCosPhi\":\"1\",\n   \"NVM_PfcIsFixedCosPhiActive\":\"0\",\n   \"NVM_PfcIsFixedCosPhiLagging\":\"1\"\n}</pre>"
+          },
+          "401": { "description": "401 Unauthorized" },
+          "500": {
+            "description": "{\"error\":\"Could not get configurations\"}"
+          }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Configurations",
+        "tags": ["api"],
+        "summary": "Gets the values of all configurations (Read API)",
+        "description": "Returns values for the accessible configurations if available. "
+      }
+    },
+    "/api/v2/inverter": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>{\n  \"fac\": 50.005,\n  \"iac_total\": 1,\n  \"ibat\": 0,\n  \"ipv\": 0,\n  \"pac_microgrid\": 0,\n  \"pac_total\": -8.7,\n  \"pbat\": 0.11,\n  \"phi\": 0,\n  \"ppv\": 0,\n  \"sac_total\": 236.7,\n  \"tmax\": 40.3,\n  \"uac\": 234.84,\n  \"ubat\": 50,\n  \"upv\": 2.2\n}\n</pre>"
+          },
+          "401": { "description": "401 Unauthorized" },
+          "500": {
+            "description": "{\"error\":\"No inverter measurements available\"}"
+          }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Inverter",
+        "tags": ["api"],
+        "summary": "Gets the inverter measurements (Read API)",
+        "description": "<p>Gets inverter data for the sonnenBatterie.</p>\n\n<table>\n  <thead>\n    <tr>\n      <th>Variable</th>\n      <th>Example Value</th>\n      <th>Unit</th>\n      <th>Description</th>\n      <th>Data type</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>fac</td>\n      <td>49.947</td>\n      <td>Hz, hertz</td>\n      <td>AC frequency in hertz</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>iac_total</td>\n      <td>0.41</td>\n      <td>A, ampere</td>\n      <td>AC current</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>ibat</td>\n      <td>0</td>\n      <td>A, ampere</td>\n      <td>Battery current</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>ipv</td>\n      <td>0</td>\n      <td>A, ampere</td>\n      <td>PV current</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>pac_microgrid</td>\n      <td>0</td>\n      <td>W, watt</td>\n      <td>AC microgrid power: <ul>\n        <li>greater than ZERO is discharging</li>\n        <li>Inverter AC Power less than ZERO is charging</li>\n      </ul></td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>pac_total</td>\n      <td>-4.126</td>\n      <td>W, watt</td>\n      <td>AC power: <ul>\n        <li>greater than ZERO is discharging</li>\n        <li>Inverter AC Power less than ZERO is charging</li>\n      </ul></td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>pbat</td>\n      <td>0</td>\n      <td>W, watt</td>\n      <td>DC Power</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>phi</td>\n      <td>0</td>\n      <td>N/A</td>\n      <td>Power factor cos \u03c6</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>ppv</td>\n      <td>0</td>\n      <td>W, watt</td>\n      <td>PV production in watts</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>sac_total</td>\n      <td>97.124</td>\n      <td>VA, volt-ampere</td>\n      <td>Output of apparent power in VA</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>tmax</td>\n      <td>32.351</td>\n      <td>\u00baC, degrees Celsius</td>\n      <td>Inverter Temperature</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>uac</td>\n      <td>237.764</td>\n      <td>V, volt</td>\n      <td>AC voltage in volts</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>ubat</td>\n      <td>212.0</td>\n      <td>V, volt</td>\n      <td>Battery voltage in volts</td>\n      <td>Float</td>\n    </tr>\n  <tr>\n      <td>upv</td>\n      <td>0</td>\n      <td>V, volt</td>\n      <td>PV voltage in volts</td>\n      <td>Float</td>\n    </tr>\n  </tbody>\n</table>\n"
+      }
+    },
+    "/api/v2/latestdata": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>{\n  \"Consumption_W\": 0,\n  \"FullChargeCapacity\": 0,\n  \"GridFeedIn_W\": 0,\n  \"Pac_total_W\": 0,\n  \"Production_W\": 0,\n  \"RSOC\": 0,\n  \"SetPoint_W\": 0,\n  \"Timestamp\": \"2019-09-19 15:07:19\",\n  \"USOC\": 0,\n  \"UTC_Offet\": 2,\n  \"ic_status\": {\n    \"DC Shutdown Reason\": {\n      \"Critical BMS Alarm\": false,\n      \"Error condition in BMS initialization\": false,\n      \"HW_Shutdown\": false,\n      \"HardWire Over Voltage\": false,\n      \"HardWired Dry Signal A\": false,\n      \"HardWired Under Voltage\": false,\n      \"Initialization Timeout\": false,\n      \"Initialization of AC contactor failed\": false,\n      \"Initialization of BMS hardware failed\": false,\n      \"Initialization of DC contactor failed\": false,\n      \"Initialization of Inverter failed\": false,\n      \"Invalid or no SystemType was set\": false,\n      \"Inverter Over Temperature\": false,\n      \"Inverter Under Voltage\": false,\n      \"Manual shutdown by user\": false,\n      \"Minimum rSOC of System reached\": false,\n      \"No Setpoint received by HC\": false,\n      \"Shutdown Timer started\": false,\n      \"System Validation failed\": false,\n      \"Voltage Monitor Changed\": false\n    },\n    \"Eclipse Led\": {\n      \"Pulsing Green\": false,\n      \"Pulsing Orange\": true,\n      \"Pulsing White\": false,\n      \"Solid Red\": false\n    },\n    \"Flat Status\": {\n      \"Auto Mode\": false,\n      \"Error\": false,\n      \"Full Charge Power\": false,\n      \"Full Discharge Power\": false,\n      \"Not Connected\": false,\n      \"Spare 1\": false,\n      \"Spare 2\": false,\n      \"Spare 3\": false,\n      \"Timeout\": false\n    },\n    \"MISC Status Bits\": {\n      \"Discharge not allowed\": false,\n      \"Min System SOC\": false,\n      \"Min User SOC\": false\n    },\n    \"Microgrid Status\": {\n      \"Continious Power Violation\": false,\n      \"Discharge Current Limit Violation\": false,\n      \"Low Temperature\": false,\n      \"Max System SOC\": false,\n      \"Max User SOC\": false,\n      \"Microgrid Enabled\": false,\n      \"Min System SOC\": false,\n      \"Min User SOC\": false,\n      \"Over Charge Current\": false,\n      \"Over Discharge Current\": false,\n      \"Peak Power Violation\": false,\n      \"Protect is activated\": false,\n      \"Transition to Ongrid Pending\": false\n    },\n    \"Setpoint Priority\": {\n      \"BMS\": false,\n      \"Energy Manager\": false,\n      \"Flat\": false,\n      \"Full Charge Request\": false,\n      \"Inverter\": false,\n      \"Min User SOC\": false,\n      \"Trickle Charge\": false\n    },\n    \"System Validation\": {\n      \"Country Code Set status flag 1\": false,\n      \"Country Code Set status flag 2\": false,\n      \"Self test Error DC Wiring\": false,\n      \"Self test Postponed\": false,\n      \"Self test Precondition not met\": false,\n      \"Self test Running\": false,\n      \"Self test successful finished\": false\n    },\n    \"nrbatterymodules\": 0,\n    \"secondssincefullcharge\": 0,\n    \"statebms\": \"not ready\",\n    \"statecorecontrolmodule\": \"config\",\n    \"stateinverter\": \"not ready\",\n    \"timestamp\": \"Thu Jan 1 01:00:00 1970\"\n  }\n}\n</pre>"
+          },
+          "401": { "description": "401 Unauthorized" }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Latestdata",
+        "tags": ["api"],
+        "summary": "Gets latest data for this sonnenBatterie (Read API)",
+        "description": "Gets latest data for this sonnenBatterie."
+      }
+    },
+    "/api/v2/setpoint/charge/{watt}": {
+      "post": {
+        "responses": {
+          "201": { "description": "true" },
+          "403": { "description": "403 Forbidden (VPP has priority)" },
+          "401": { "description": "401 Unauthorized" }
+        },
+        "parameters": [
+          {
+            "description": "For example: <b>2000</b>",
+            "format": "int32",
+            "required": true,
+            "maximum": 1000000,
+            "minimum": 0,
+            "in": "path",
+            "type": "integer",
+            "name": "watt"
+          }
+        ],
+        "produces": ["application/json"],
+        "description": "The charging power of a storage system can be controlled by setting a setpoint in watts. The corresponding value of the setpoint is kept until the battery receives a new charging or discharging value. <br>If VPP is active, the request will be rejected.",
+        "tags": ["api"],
+        "summary": "Sends a charge command to the battery (Write API)",
+        "consumes": ["application/json"],
+        "operationId": "postApiV2SetpointChargeWatt"
+      }
+    },
+    "/api/v2/powermeter": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "<pre>[\n  {\n    \"a_l1\": 0,\n    \"a_l2\": 0,\n    \"a_l3\": 0,\n    \"channel\": 1,\n    \"deviceid\": 4,\n    \"direction\": \"production\",\n    \"error\": -1,\n    \"kwh_exported\": 0,\n    \"kwh_imported\": 0,\n    \"v_l1_l2\": 0,\n    \"v_l1_n\": 0,\n    \"v_l2_l3\": 0,\n    \"v_l2_n\": 0,\n    \"v_l3_l1\": 0,\n    \"v_l3_n\": 0,\n    \"va_total\": 0,\n    \"var_total\": 0,\n    \"w_l1\": 0,\n    \"w_l2\": 0,\n    \"w_l3\": 0,\n    \"w_total\": 0\n  },\n  {\n    \"a_l1\": 0,\n    \"a_l2\": 0,\n    \"a_l3\": 0,\n    \"channel\": 2,\n    \"deviceid\": 4,\n    \"direction\": \"consumption\",\n    \"error\": -1,\n    \"kwh_exported\": 0,\n    \"kwh_imported\": 0,\n    \"v_l1_l2\": 0,\n    \"v_l1_n\": 0,\n    \"v_l2_l3\": 0,\n    \"v_l2_n\": 0,\n    \"v_l3_l1\": 0,\n    \"v_l3_n\": 0,\n    \"va_total\": 0,\n    \"var_total\": 0,\n    \"w_l1\": 0,\n    \"w_l2\": 0,\n    \"w_l3\": 0,\n    \"w_total\": 0\n  }\n]</pre>"
+          },
+          "401": { "description": "401 Unauthorized" }
+        },
+        "produces": ["application/json"],
+        "operationId": "getApiV2Powermeter",
+        "tags": ["api"],
+        "summary": "Gets the latest power-meter measurements (Read API)",
+        "description": "Gets the latest power-meter measurements."
+      }
+    }
+  },
+  "host": "= ip of the system",
+  "swagger": "2.0",
+  "produces": ["application/json"]
+}
